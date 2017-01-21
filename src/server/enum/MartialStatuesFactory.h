@@ -29,7 +29,7 @@ public:
             case 'W':
                 return MartialStatues::WIDOWED;
             default:
-                throw runtime_error("Wrong status");
+                throw "Wrong status";
         }
     }
 };

@@ -16,6 +16,7 @@
 #include "../taxi/Cab.h"
 #include "../taxi/LuxuryCab.h"
 #include "../sockets/Tcp.h"
+#include "../../parsers/Parser.h"
 
 class MainFlow {
 
@@ -27,6 +28,7 @@ private:
     pthread_t connection_thread;
     map<int, Connection *> *conMap;
     int *choice;
+    Parser parser;
 
 public:
 

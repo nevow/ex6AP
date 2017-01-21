@@ -14,9 +14,6 @@ using namespace std;
  * @param r is the size of rows
  */
 Map::Map(int c, int r) {
-    if (c <= 0 || r <= 0) {
-        throw runtime_error("can't create Map from negative values");
-    }
     rows = r;
     columns = c;
 

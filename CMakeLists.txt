@@ -67,7 +67,10 @@ set(SOURCE_FILES
         src/server/sockets/Connection.h
 
         src/server/listeners/SetTripListener.cpp
-        src/server/listeners/SetTripListener.h)
+        src/server/listeners/SetTripListener.h
+
+        src/parsers/Parser.h
+        src/parsers/Parser.cpp)
 
 add_executable(client src/client/client.cpp ${SOURCE_FILES})
 add_executable(server src/server/server.cpp ${SOURCE_FILES})

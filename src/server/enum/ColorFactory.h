@@ -30,7 +30,7 @@ public:
             case 'W':
                 return Color::WHITE;
             default:
-                throw runtime_error("Wrong Color");
+                throw "Wrong Color";
         }
     }
 };

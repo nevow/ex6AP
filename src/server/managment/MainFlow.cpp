@@ -20,10 +20,8 @@ MainFlow::MainFlow(int port) {
     // creates a socket for connection with the clients
     sock = new Tcp(1, port);
 
-    // get the map's size and create it
-    cin >> columns >> rows;
-    Map *map = new Map(columns, rows);
-    cin.ignore();
+    // cerate map from user input
+    Map *map = parser.createMap();
 
     // get the obstacle amount
     obstacleNum = ProperInput::validInt();
@@ -31,12 +29,12 @@ MainFlow::MainFlow(int port) {
     conMap = new std::map<int, Connection *>();
     // create the system operation
     so = new SystemOperations(map, conMap);
-
+    Point *obs;
     // make the obstacles List from the input
     for (; obstacleNum > 0; obstacleNum--) {
-        Point obs = ProperInput::validPoint(columns, rows);
-        cin.ignore();
-        so->addObstacle(obs);
+        obs = parser.createPoint();
+        so->addObstacle(*obs);
+        delete (obs);
     }
 }
 
@@ -44,6 +42,7 @@ MainFlow::MainFlow(int port) {
  * get inputs from user and follow the commands.
  */
 void MainFlow::input() {
+    char input;
     choice = new int();
     int id, drivers_num, taxi_type, num_passengers, trip_time;
     double tariff;
@@ -53,6 +52,8 @@ void MainFlow::input() {
     cd.connections = connections;
 
     do {
+        cin >> input;
+        cin.ignore();
         // get the input from user to choose the action
         *choice = ProperInput::validInt();
         cin.ignore();
@@ -71,7 +72,7 @@ void MainFlow::input() {
                 }
                 pthread_join(connection_thread, NULL);      // wait until the the thread finish
                 for (std::list<Connection *>::const_iterator con = connections->begin(),
-                             end = connections->end(); con != end; ++con) {
+                         end = connections->end(); con != end; ++con) {
                     // receive the driver from the client
                     Driver *driver = (*con)->receiveData<Driver>();
                     // update the connection-id Driver map
@@ -85,60 +86,40 @@ void MainFlow::input() {
             }
                 // create new TripInfo
             case 2: {
-                // get the input for the trip info
-                id = ProperInput::validInt();
-                cin >> trash;
-                Point p1 = ProperInput::validPoint(so->getX(), so->getY());
-                Point *start = new Point(p1.getX(), p1.getY());
-                cin >> trash;
-                Point p2 = ProperInput::validPoint(so->getX(), so->getY());
-                Point *end = new Point(p2.getX(), p2.getY());
-                cin >> trash;
-                num_passengers = ProperInput::validInt();
-                cin >> trash;
-                tariff = ProperInput::validDouble();
-                cin >> trash;
-                trip_time = ProperInput::validInt();
-                cin.ignore();
-                TripInfo *tripInfo = new TripInfo(id, start, end, num_passengers, tariff,
-                                                  trip_time);
-                so->addTI(tripInfo);                        // add the trip info to the system
+                try {
+                    // get the input for the trip info
+                    TripInfo *tripInfo = parser.createTripInfo(actionCount, so->getX(), so->getY());
+                    so->addTI(tripInfo);                        // add the trip info to the system
+                } catch (...) {
+                    cout << -1 << endl;
+                }
                 break;
 
             }
                 // create new Taxi
             case 3: {
-                // get the input for the taxi
-                id = ProperInput::validInt();
-                cin >> trash;
-                taxi_type = ProperInput::validInt();
-                cin >> trash >> manufacturer >> trash >> color;
-                cin.ignore();
                 Taxi *taxi;
-
-                if (taxi_type == 1)                      // create regular cab
-                {
-                    taxi = new Cab(ColorFactory::charToColor(color),
-                                   CarManufactureFactory::charToFirm(manufacturer), id);
-
-                } else if (taxi_type == 2)               // create LuxuryCab cab
-                {
-                    taxi = new LuxuryCab(ColorFactory::charToColor(color),
-                                         CarManufactureFactory::charToFirm(
-                                                 manufacturer), id);
-                } else {
-                    break;                               // wrong input from the user
+                try {
+                    taxi = parser.createTaxi();
+                    so->addTaxi(taxi);                       // add the taxi to the system
+                } catch (...) {
+                    cout << -1 << endl;
                 }
-                so->addTaxi(taxi);                       // add the taxi to the system
                 break;
             }
                 // request for a driver location by his id
             case 4: {
-                id = ProperInput::validInt();            // the id of the requested driver
-                cin.ignore();
-                Point *location = so->getDriverLocation(id);
-                if (location) {
-                    cout << *location;
+                char idString[11];
+                cin.getline(idString, sizeof(idString), '\n');
+                try {
+                    id = parser.isValidId(idString);          // the id of the requested driver
+                    Point *location = so->getDriverLocation(id);
+                    if (location) {
+                        cout << *location;
+                    }
+                } catch (string s) {
+                    cout << -1 << endl;
+                    cout << s << endl;
                 }
                 break;
             }

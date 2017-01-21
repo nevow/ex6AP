@@ -6,31 +6,31 @@
 #include "../server/tripOperations/Driver.h"
 #include "../server/enum/MartialStatuesFactory.h"
 #include "../server/sockets/Tcp.h"
+#include "../parsers/Parser.h"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
+    Driver *driver;
+    Parser parse;
+    try {
+        // get a driver with the user input
+        driver = parse.createDriver();
+    } catch (char const *s) {
+        return 1;
+    }
 
-    // get a driver with user input
-    int id, age, experience, vehicleId;
-    char trash, status;
-    id = ProperInput::validInt();
-    cin >> trash;
-    age = ProperInput::validInt();
-    cin >> trash >> status >> trash;
-    experience = ProperInput::validInt();
-    cin >> trash;
-    vehicleId = ProperInput::validInt();
-    cin.ignore();
     char buffer[50];
 
     // create a socket for transferring data between the server and the client
     Socket *sock = new Tcp(0, atoi(argv[2]));
-    sock->initialize(0);
+    int connected = sock->initialize(0);
+    if (connected == ERROR_CONNECT) {
+        delete driver;
+        delete sock;
+        return 2;
+    }
 
-    // create a driver with the user input
-    Driver *driver = new Driver(id, age, MartialStatuesFactory::getMartialStatus(status),
-                                experience, vehicleId);
     // serialize and sendData the driver
     DataSender<Driver>::sendData(sock, driver, 0);
 
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
             std::list<CoordinatedItem *> *road = ti->getRoad();
             // pass the coordinated items of the road to the tempRoad
             for (std::list<CoordinatedItem *>::const_iterator iterator = road->begin(),
-                         end = road->end(); iterator != end; ++iterator) {
+                     end = road->end(); iterator != end; ++iterator) {
                 tempRoad->push_back(*(iterator));
             }
 
