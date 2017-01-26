@@ -67,6 +67,11 @@ void BFS::BFSAlgo(Grid *graph, CoordinatedItem *root) {
  * @return list of CoordinatedItem represent the road
  */
 list<CoordinatedItem *> *BFS::getTrip(CoordinatedItem *dest) {
+    // if dest is unreachable return null
+    if (dest->getDistance() < 0) {
+        cout << "BFS: returning NULL" << endl;
+        return NULL;
+    }
     std::list<CoordinatedItem *> *road = new list<CoordinatedItem *>;
 
     // insert the items to the stack from the end point to the start traversing over the parent.
@@ -81,5 +86,7 @@ list<CoordinatedItem *> *BFS::getTrip(CoordinatedItem *dest) {
     road->pop_front();
     road->front()->setParent(NULL);
     pthread_mutex_unlock(&grid_locker);         // unlock the access to the BFS
+
+    std::cout << "BFS: road computed !" << endl;
     return road;
 }

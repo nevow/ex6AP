@@ -10,6 +10,7 @@
 #include "../tripOperations/TaxiCenter.h"
 #include "../coordinates/Map.h"
 #include "../listeners/EventListener.h"
+#include "../roadComputers/ThreadPool.h"
 
 extern pthread_mutex_t grid_locker;
 
@@ -23,6 +24,7 @@ private:
     list<Node *> *obstacles;
     TaxiCenter *tc;
     Map *map;
+    ThreadPool *threadPool;
 
 public:
 
@@ -37,6 +39,7 @@ public:
             obstacles->pop_front();
         }
         delete (obstacles);
+        delete (threadPool);
     }
 
     int getX() const;

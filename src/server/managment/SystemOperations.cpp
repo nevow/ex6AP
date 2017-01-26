@@ -4,15 +4,15 @@
 
 #include <map>
 #include "SystemOperations.h"
-#include "BFS.h"
+#include "../roadComputers/BFS.h"
 
-// global map of id trips info (key) and threads (value)
-std::map<int, pthread_t> computeRoadT;
+// global map of id trips info (key) and Tasks (value)
+std::map<int, Task *> computeRoadT;
 
 /**
- * struct ThreadArgs has Map and TripInfo
+ * struct TArgs has Map and TripInfo
  */
-struct ThreadArgs {
+struct TArgs {
     Map *grid;
     TripInfo *ti;
 };
@@ -28,6 +28,7 @@ SystemOperations::SystemOperations(Map *map1, std::map<int, Connection *> *conMa
     tc = new TaxiCenter(conMap);
     x = map->getColumns();
     y = map->getRows();
+    threadPool = new ThreadPool(5);
     pthread_mutex_init(&grid_locker, 0);
 }
 
@@ -74,23 +75,19 @@ void SystemOperations::addObstacle(Point obstacle) {
 
 /**
  * addTI add the tripInfo to the taxi center,
- * and create thread with the function ComputeRoad
+ * and create Tasks with the function ComputeRoad and the args
  * @param tripInfo is the TripInfo to add to the taxi center
  */
 void SystemOperations::addTI(TripInfo *tripInfo) {
-    pthread_t t1;
-    ThreadArgs *threadArgs = new ThreadArgs();
-    threadArgs->ti = tripInfo;
-    threadArgs->grid = map;
-
-    int status = pthread_create(&t1, NULL, ComputeRoad, threadArgs);
-    // if the the thread Succeeded
-    if (!status) {
-        computeRoadT[tripInfo->getRideId()] = t1;   // add the thread to computeRoadT map
-        tc->addTI(tripInfo);                        // add the tripInfo to the taxi center
-    } else {
-        std::cout << "ComputeRoad fails" << endl;
-    }
+    TArgs *tArgs = new TArgs();
+    tArgs->ti = tripInfo;
+    tArgs->grid = map;
+    std::cout << "start addTI" << endl;
+    Task *task = new Task(ComputeRoad, tArgs);
+    threadPool->add_task(task);
+    std::cout << "addTI - add_task" << endl;
+    computeRoadT[tripInfo->getRideId()] = task;    // add the thread to computeRoadT map
+    tc->addTI(tripInfo);                           // add the tripInfo to the taxi center
 }
 
 /**
@@ -114,7 +111,7 @@ void SystemOperations::moveAll() {
  * @return
  */
 void *SystemOperations::ComputeRoad(void *threadArgs) {
-    ThreadArgs *args = (ThreadArgs *) threadArgs;
+    TArgs *args = (TArgs *) threadArgs;
     Node *start = new Node(args->ti->getStart());          // the start of the road
     Point *end = (args->ti->getDestination());             // the end of the road
     CoordinatedItem *dest = args->grid->getCoordinatedItem(end->getX(), end->getY());

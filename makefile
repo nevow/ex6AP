@@ -1,10 +1,10 @@
 all: server.out client.out
 
-server.out: server.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o BFS.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Connection.o
-	g++ -o server.out -std=c++0x server.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o BFS.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Connection.o -lboost_serialization -lpthread
+server.out: server.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o BFS.o Task.o ThreadPool.o Connection.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o
+	g++ -o server.out -std=c++0x server.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o BFS.o Task.o ThreadPool.o Connection.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o -lboost_serialization -lpthread
 
-client.out: client.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o BFS.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Connection.o
-	g++ -o client.out -std=c++0x client.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o BFS.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Connection.o -lboost_serialization -lpthread
+client.out: client.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o BFS.o Task.o ThreadPool.o Connection.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o
+	g++ -o client.out -std=c++0x client.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o BFS.o Task.o ThreadPool.o Connection.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o -lboost_serialization -lpthread
 
 client.o: src/client/client.cpp
 	g++ -std=c++0x -c src/client/client.cpp
@@ -27,9 +27,6 @@ TripEndListener.o: src/server/listeners/TripEndListener.cpp src/server/listeners
 SetTripListener.o: src/server/listeners/SetTripListener.cpp src/server/listeners/SetTripListener.h
 	g++ -std=c++0x -c src/server/listeners/SetTripListener.cpp
 
-BFS.o: src/server/managment/BFS.cpp src/server/managment/BFS.h src/server/coordinates/Grid.h src/server/coordinates/CoordinatedItem.h
-	g++ -std=c++0x -c src/server/managment/BFS.cpp
-
 DataSender.o: src/server/managment/DataSender.cpp src/server/managment/DataSender.h
 	g++ -std=c++0x -c src/server/managment/DataSender.cpp
 
@@ -41,6 +38,18 @@ ProperInput.o: src/server/managment/ProperInput.cpp src/server/managment/ProperI
 
 SystemOperations.o: src/server/managment/SystemOperations.cpp src/server/managment/SystemOperations.h
 	g++ -std=c++0x -c src/server/managment/SystemOperations.cpp
+
+BFS.o: src/server/roadComputers/BFS.cpp src/server/roadComputers/BFS.h src/server/coordinates/Grid.h src/server/coordinates/CoordinatedItem.h
+	g++ -std=c++0x -c src/server/roadComputers/BFS.cpp
+
+Task.o: src/server/roadComputers/Task.cpp src/server/roadComputers/Task.h
+	g++ -std=c++0x -c src/server/roadComputers/Task.cpp
+
+ThreadPool.o: src/server/roadComputers/ThreadPool.cpp src/server/roadComputers/ThreadPool.h
+	g++ -std=c++0x -c src/server/roadComputers/ThreadPool.cpp
+
+Connection.o: src/server/sockets/Connection.cpp src/server/sockets/Connection.h
+	g++ -std=c++0x -c src/server/sockets/Connection.cpp
 
 Socket.o: src/server/sockets/Socket.cpp src/server/sockets/Socket.h
 	g++ -std=c++0x -c src/server/sockets/Socket.cpp
@@ -68,9 +77,6 @@ TaxiCenter.o: src/server/tripOperations/TaxiCenter.cpp src/server/tripOperations
 
 TripInfo.o: src/server/tripOperations/TripInfo.cpp src/server/tripOperations/TripInfo.h
 	g++ -std=c++0x -c src/server/tripOperations/TripInfo.cpp
-
-Connection.o: src/server/sockets/Connection.cpp src/server/sockets/Connection.h
-	g++ -std=c++0x -c src/server/sockets/Connection.cpp
 
 clean:
 	rm -f *.o server.out client.out

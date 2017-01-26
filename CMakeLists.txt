@@ -28,8 +28,13 @@ set(SOURCE_FILES
         src/server/tripOperations/Passenger.cpp
         src/server/tripOperations/Passenger.h
 
-        src/server/managment/BFS.cpp
-        src/server/managment/BFS.h
+        src/server/roadComputers/ThreadPool.cpp
+        src/server/roadComputers/ThreadPool.h
+        src/server/roadComputers/BFS.cpp
+        src/server/roadComputers/BFS.h
+        src/server/roadComputers/Task.cpp
+        src/server/roadComputers/Task.h
+
         src/server/managment/SystemOperations.cpp
         src/server/managment/SystemOperations.h
         src/server/managment/MainFlow.cpp

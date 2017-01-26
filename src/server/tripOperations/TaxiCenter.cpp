@@ -6,8 +6,9 @@
 #include "TaxiCenter.h"
 #include "../listeners/TripEndListener.h"
 #include "../listeners/SetTripListener.h"
+#include "../roadComputers/Task.h"
 
-extern std::map<int, pthread_t> computeRoadT;
+extern std::map<int, Task *> computeRoadT;
 
 /**
  * consturctor.
@@ -207,16 +208,28 @@ void TaxiCenter::addTaxi(Taxi *cab) {
  */
 void TaxiCenter::addTI(TripInfo *ti) {
     trips->push_back(ti);
+    std::cout << "TaxiCenter: addTI" << endl;
 }
 
 /**
  * @param ti trip info to assign to the driver.
  */
 void TaxiCenter::setDriverToTi(TripInfo *ti) {
+    // wait for the task that compute the rode of the trip info finish
+    while ((computeRoadT[ti->getRideId()])->getFinished() == 0) {
+        sleep(1);
+    }
+    delete (computeRoadT[ti->getRideId()]);
+
+    std::cout << "TaxiCenter: setDriverToTi - start" << endl;
+    // check if the road didn't computed, delete it
+    if (ti->getRoad() == NULL) {
+        delete (ti);
+        return;
+    }
     // get the closest available driver, assign him with the trip info.
     Driver *d = getClosestDriver(ti->getStart());
-    // wait for the thread that compute the rode of the trip info
-    pthread_join(computeRoadT[ti->getRideId()], NULL);
+
     d->setTi(ti);
     Connection *c = (*conMap)[d->getId()];
 
@@ -230,9 +243,11 @@ void TaxiCenter::setDriverToTi(TripInfo *ti) {
     c->sendData<TripInfo>(ti);
     // receive confirm from the client
     c->receive(buffer, sizeof(buffer));
+    std::cout << "TaxiCenter: setDriverToTi - finish" << endl;
 
     // put the driver at the employees list
     employees->push_back(d);
+    std::cout << "TaxiCenter: setDriverToTi - push finish -  finish" << endl;
 }
 
 /**
@@ -251,5 +266,7 @@ void TaxiCenter::moveAll() {
                  end = listeners->end(); iterator != end; ++iterator) {
         (*iterator)->notify();
     }
+    std::cout << "TaxiCenter: moveAll " << endl;
+
 }
 
