@@ -89,6 +89,10 @@ void MainFlow::input() {
             // create drivers, gets from the client
             case 1: {
                 drivers_num = parser.getPositiveNumberFromUser();      // amount of drivers
+                if (drivers_num == -1) {
+                    cout << "-1" << endl;
+                    break;
+                }
                 sock->initialize(drivers_num);
                 // create thread that handle with client acceptnes
                 int status = pthread_create(&connection_thread, NULL, acceptClients, &cd);
