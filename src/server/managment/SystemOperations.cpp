@@ -125,7 +125,7 @@ void *SystemOperations::ComputeRoad(void *threadArgs) {
 
 /**
  *
- * @return thet obstacles list
+ * @return the obstacles list
  */
 list<Node *> *SystemOperations::getObstacles() const {
     return obstacles;
