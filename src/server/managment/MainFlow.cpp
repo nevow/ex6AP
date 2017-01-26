@@ -15,54 +15,80 @@ int actionCount = 0;
  */
 MainFlow::MainFlow(int port) {
 
-    int rows, columns, obstacleNum;
+    int obstacleNum = 0;
     connections = new std::list<Connection *>();
     // creates a socket for connection with the clients
     sock = new Tcp(1, port);
+    std::list<Point *> points;
+    Map *map;
+    do {
+        int flag = 0;
+        // create map from user input
+        map = parser.createMap();
+        if (map == NULL) {
+            cout << "-1" << endl;
+            continue;
+        }
+        obstacleNum = parser.getPositiveNumberFromUser();
+        if (obstacleNum == -1) {
+            cout << "-1" << endl;
+            delete map;
+            continue;
+        }
+        Point *obs;
+        for (; obstacleNum > 0; obstacleNum--) {
+            obs = parser.createPoint();
+            if (obs == NULL) {
+                flag = 1;
+                break;
+            }
+            points.push_back(obs);
+        }
+        if (flag == 1) {
+            cout << "-1" << endl;
+            while (!points.empty()) {
+                delete points.front();
+                points.pop_front();
+            }
+            continue;
+        }
+        conMap = new std::map<int, Connection *>();
+        break;
+    } while (true);
 
-    // cerate map from user input
-    Map *map = parser.createMap();
-
-    // get the obstacle amount
-    obstacleNum = ProperInput::validInt();
-    cin.ignore();
-    conMap = new std::map<int, Connection *>();
     // create the system operation
     so = new SystemOperations(map, conMap);
-    Point *obs;
     // make the obstacles List from the input
-    for (; obstacleNum > 0; obstacleNum--) {
-        obs = parser.createPoint();
-        so->addObstacle(*obs);
-        delete (obs);
+    while (!points.empty()) {
+        Point *p = points.front();
+        points.pop_front();
+        so->addObstacle(*p);
+        delete p;
     }
+
 }
 
 /**
  * get inputs from user and follow the commands.
  */
 void MainFlow::input() {
-    char input;
     choice = new int();
-    int id, drivers_num, taxi_type, num_passengers, trip_time;
-    double tariff;
-    char trash, manufacturer, color;
+    int id, drivers_num;
     connectionData cd;
     cd.sock = sock;
     cd.connections = connections;
 
     do {
-        cin >> input;
-        cin.ignore();
         // get the input from user to choose the action
-        *choice = ProperInput::validInt();
-        cin.ignore();
+        *choice = parser.getPositiveNumberFromUser();
+        if (*choice == -1) {
+            cout << "-1" << endl;
+        }
         switch (*choice) {
 
             // create drivers, gets from the client
             case 1: {
-                drivers_num = ProperInput::validInt();      // amount of drivers
-                cin.ignore();
+                drivers_num = parser.getPositiveNumberFromUser();      // amount of drivers
                 sock->initialize(drivers_num);
                 // create thread that handle with client acceptnes
                 int status = pthread_create(&connection_thread, NULL, acceptClients, &cd);
@@ -86,24 +112,25 @@ void MainFlow::input() {
             }
                 // create new TripInfo
             case 2: {
-                try {
-                    // get the input for the trip info
-                    TripInfo *tripInfo = parser.createTripInfo(actionCount, so->getX(), so->getY());
+                // get the input for the trip info
+                TripInfo *tripInfo = parser.createTripInfo(actionCount, so->getX(), so->getY());
+                if (tripInfo == NULL) {
+                    cout << "-1" << endl;
+                } else if (parser.isObstacle(tripInfo->getStart(), so->getObstacles())
+                           || !parser.isObstacle(tripInfo->getDestination(), so->getObstacles())) {
+                    delete tripInfo;
+                } else {
                     so->addTI(tripInfo);                        // add the trip info to the system
-                } catch (...) {
-                    cout << -1 << endl;
                 }
                 break;
-
             }
                 // create new Taxi
             case 3: {
-                Taxi *taxi;
-                try {
-                    taxi = parser.createTaxi();
-                    so->addTaxi(taxi);                       // add the taxi to the system
-                } catch (...) {
+                Taxi *taxi = parser.createTaxi();
+                if (taxi == NULL) {
                     cout << -1 << endl;
+                } else {
+                    so->addTaxi(taxi);                       // add the taxi to the system
                 }
                 break;
             }
@@ -117,9 +144,8 @@ void MainFlow::input() {
                     if (location) {
                         cout << *location;
                     }
-                } catch (string s) {
+                } catch (...) {
                     cout << -1 << endl;
-                    cout << s << endl;
                 }
                 break;
             }
@@ -135,7 +161,7 @@ void MainFlow::input() {
             }
                 // in every other case - don't do anything.
             default: {
-                break;
+                continue;
             }
         }
         validateAllReceivedInfo = 0;         // initialize for the next choice

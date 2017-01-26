@@ -16,6 +16,9 @@
 using namespace std;
 
 class Parser {
+private:
+    int gridCols;
+    int gridRows;
 public:
     Driver *createDriver();
 
@@ -52,6 +55,13 @@ public:
     Point *isValidPoint(char *x, char *y);
 
     void isValidPointOnGrid(Point *p, int cols, int rows);
+
+    int checksIfNumberIsValid(char *c);
+
+    int getPositiveNumberFromUser();
+
+    int isObstacle(Point *, list<Node *> *obstacles);
+
 };
 
 

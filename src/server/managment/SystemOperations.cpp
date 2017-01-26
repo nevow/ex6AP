@@ -122,3 +122,11 @@ void *SystemOperations::ComputeRoad(void *threadArgs) {
     delete (args);
     return NULL;
 }
+
+/**
+ *
+ * @return thet obstacles list
+ */
+list<Node *> *SystemOperations::getObstacles() const {
+    return obstacles;
+}

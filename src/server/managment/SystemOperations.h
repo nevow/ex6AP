@@ -59,6 +59,8 @@ public:
     void moveAll();
 
     static void *ComputeRoad(void *tripInfo);
+
+    list<Node *> *getObstacles() const;
 };
 
 
