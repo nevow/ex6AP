@@ -121,7 +121,7 @@ void MainFlow::input() {
                 if (tripInfo == NULL) {
                     cout << "-1" << endl;
                 } else if (parser.isObstacle(tripInfo->getStart(), so->getObstacles())
-                           || !parser.isObstacle(tripInfo->getDestination(), so->getObstacles())) {
+                           || parser.isObstacle(tripInfo->getDestination(), so->getObstacles())) {
                     delete tripInfo;
                 } else {
                     so->addTI(tripInfo);                        // add the trip info to the system

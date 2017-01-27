@@ -5,14 +5,21 @@
 
 Driver *Parser::createDriver() {
     char id[12], age[5], status[3], experience[5], vehicleId[12];
-    char buffer[40];
+    char buffer[60];
     char c;
     cin.getline(buffer, sizeof(buffer), '\n');
-    int inputId = 0;
+    int inputId = 0, flag2 = 0;
     int i = 0;
     int lastIndex = 0;
     do {
         c = buffer[i];
+        if ((c == ' ') && (flag2 == 0)) {
+            i++;
+            lastIndex++;
+            continue;
+        } else {
+            flag2 = 1;
+        }
         if (c == ',' || c == '\0') {
             switch (inputId) {
                 case 0: {
@@ -72,15 +79,22 @@ Driver *Parser::createDriver() {
 
 Taxi *Parser::createTaxi() {
     char vehicleId[12], taxi_type[3], manufacturer[3], color[3];
-    char buffer[25];
+    char buffer[40];
     char c;
     cin.getline(buffer, sizeof(buffer), '\n');
-    int inputId = 0, flag = 0;
+    int inputId = 0, flag = 0, flag2 = 0;
     int i = 0;
     int lastIndex = 0;
 
     do {
         c = buffer[i];
+        if ((c == ' ') && (flag2 == 0)) {
+            i++;
+            lastIndex++;
+            continue;
+        } else {
+            flag2 = 1;
+        }
         if (c == ',' || c == '\0') {
             switch (inputId) {
                 case 0: {
@@ -138,14 +152,21 @@ Taxi *Parser::createTaxi() {
 TripInfo *Parser::createTripInfo(int clock, int x, int y) {
     char id[12], startx[6], starty[6], endx[6], endy[6], amountOfPassengers[3],
         tariff[11], time[11];
-    char buffer[100];
+    char buffer[120];
     char c;
     cin.getline(buffer, sizeof(buffer), '\n');
-    int inputId = 0, flag = 0;
+    int inputId = 0, flag = 0, flag2 = 0;
     int i = 0;
     int lastIndex = 0;
     do {
         c = buffer[i];
+        if ((c == ' ') && (flag2 == 0)) {
+            i++;
+            lastIndex++;
+            continue;
+        } else {
+            flag2 = 1;
+        }
         if (c == ',' || c == '\0') {
             switch (inputId) {
                 case 0: {
@@ -236,14 +257,21 @@ TripInfo *Parser::createTripInfo(int clock, int x, int y) {
 Map *Parser::createMap() {
     int flag = 0;
     char columns[6], r[6];
-    char buffer[20];
+    char buffer[40];
     char c;
     cin.getline(buffer, sizeof(buffer), '\n');
-    int inputId = 0;
+    int inputId = 0, flag2 = 0;
     int i = 0;
     int lastIndex = 0;
     do {
         c = buffer[i];
+        if ((c == ' ') && (flag2 == 0)) {
+            i++;
+            lastIndex++;
+            continue;
+        } else {
+            flag2 = 1;
+        }
         if (c == ' ' || c == '\0') {
             switch (inputId) {
                 case 0: {
@@ -285,14 +313,21 @@ Map *Parser::createMap() {
 Point *Parser::createPoint() {
     int flag = 0;
     char xCoord[6], yCoord[6];
-    char buffer[20];
+    char buffer[30];
     char c;
     cin.getline(buffer, sizeof(buffer), '\n');
-    int inputId = 0;
+    int inputId = 0, flag2 = 0;
     int i = 0;
     int lastIndex = 0;
     do {
         c = buffer[i];
+        if ((c == ' ') && (flag2 == 0)) {
+            i++;
+            lastIndex++;
+            continue;
+        } else {
+            flag2 = 1;
+        }
         if (c == ',' || c == '\0') {
             switch (inputId) {
                 case 0: {
