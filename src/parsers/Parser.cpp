@@ -297,43 +297,43 @@ Map *Parser::createMap() {
     char buffer[40];
     char c;
     cin.getline(buffer, sizeof(buffer), '\n');
-    int inputId = 0, flag2 = 0;
+    int inputId = 0;
     int i = 0;
     int lastIndex = 0;
     // keep traversing over the letters until all the buffer got rinserted to the rights arrays
     do {
         c = buffer[i];
         // if the start of the buffer is space
-        if ((c == ' ') && (flag2 == 0)) {
+        if (c == ' ') {
             i++;
             lastIndex++;
             continue;
-        } else {
-            // reached the a letter not space. stop ignoring spaces
-            flag2 = 1;
+        }
+        while ((c != ' ') && (c != '\0')) {
+            i++;
+            c = buffer[i];
         }
         // cut the buffer with the ' ' and the '\0' letters
-        if (c == ' ' || c == '\0') {
-            switch (inputId) {
-                case 0: {
-                    validInputAndCopy(columns, buffer, sizeof(columns), lastIndex, (i - 1));
-                    lastIndex = i + 1;
-                    inputId++;
-                    break;
-                }
-                case 1: {
-                    validInputAndCopy(r, buffer, sizeof(r), lastIndex, (i - 1));
-                    lastIndex = i + 1;
-                    inputId++;
-                    break;
-                }
-                default: {
-                    flag = 1;
-                    c = '\0';
-                    break;
-                }
+        switch (inputId) {
+            case 0: {
+                validInputAndCopy(columns, buffer, sizeof(columns), lastIndex, (i - 1));
+                lastIndex = i + 1;
+                inputId++;
+                break;
+            }
+            case 1: {
+                validInputAndCopy(r, buffer, sizeof(r), lastIndex, (i - 1));
+                lastIndex = i + 1;
+                inputId++;
+                break;
+            }
+            default: {
+                flag = 1;
+                c = '\0';
+                break;
             }
         }
+
         i++;
     } while (c != '\0');
     // validate all the info in the arrays
