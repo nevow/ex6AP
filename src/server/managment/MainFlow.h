@@ -12,7 +12,6 @@
 #include "../enum/ColorFactory.h"
 #include "../enum/CarManufactureFactory.h"
 #include "../taxi/LuxuryCab.h"
-#include "ProperInput.h"
 #include "../taxi/Cab.h"
 #include "../taxi/LuxuryCab.h"
 #include "../sockets/Tcp.h"

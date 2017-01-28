@@ -39,8 +39,6 @@ set(SOURCE_FILES
         src/server/managment/SystemOperations.h
         src/server/managment/MainFlow.cpp
         src/server/managment/MainFlow.h
-        src/server/managment/ProperInput.cpp
-        src/server/managment/ProperInput.h
         src/server/managment/DataSender.cpp
         src/server/managment/DataSender.h
 
@@ -65,8 +63,6 @@ set(SOURCE_FILES
         src/server/sockets/Socket.h
         src/server/sockets/Tcp.cpp
         src/server/sockets/Tcp.h
-        src/server/sockets/Udp.cpp
-        src/server/sockets/Udp.h
 
         src/server/sockets/Connection.cpp
         src/server/sockets/Connection.h

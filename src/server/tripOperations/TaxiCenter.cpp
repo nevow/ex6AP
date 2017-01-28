@@ -11,7 +11,7 @@
 extern std::map<int, Task *> computeRoadT;
 
 /**
- * consturctor.
+ * constructor.
  * @param sock is the socket of the driver
  */
 TaxiCenter::TaxiCenter(map<int, Connection *> *cm) : conMap(cm), clock(0) {
@@ -94,7 +94,7 @@ Point *TaxiCenter::getDriverLocation(int id) {
     // search the driver at the employees list
     if (!employees->empty()) {
         for (std::list<Driver *>::const_iterator iterator = employees->begin(),
-                 end = employees->end(); iterator != end; ++iterator) {
+                     end = employees->end(); iterator != end; ++iterator) {
             if ((*iterator)->getId() == id) {
                 return (*iterator)->getCab()->getLocation()->getP();
             }
@@ -103,7 +103,7 @@ Point *TaxiCenter::getDriverLocation(int id) {
     // search the driver at the availableDrivers list
     if (!availableDrivers->empty()) {
         for (std::list<Driver *>::const_iterator iterator = availableDrivers->begin(),
-                 end = availableDrivers->end(); iterator != end; ++iterator) {
+                     end = availableDrivers->end(); iterator != end; ++iterator) {
             if ((*iterator)->getId() == id) {
                 return (*iterator)->getCab()->getLocation()->getP();
             }
@@ -118,7 +118,7 @@ Point *TaxiCenter::getDriverLocation(int id) {
  */
 Taxi *TaxiCenter::getTaxiByID(int id) {
     for (std::list<Taxi *>::const_iterator iterator = cabs->begin(),
-             end = cabs->end(); iterator != end; ++iterator) {
+                 end = cabs->end(); iterator != end; ++iterator) {
         if ((*iterator)->getId() == id) {
             return *iterator;
         }
@@ -176,7 +176,7 @@ TripInfo *TaxiCenter::getUrgentTi() {
     if (!(trips->empty())) {
         // search the earliest trip info and save a pointer to him
         for (std::list<TripInfo *>::const_iterator iterator = trips->begin(),
-                 end = trips->end(); iterator != end; ++iterator) {
+                     end = trips->end(); iterator != end; ++iterator) {
             if ((*iterator)->getTripTime() == clock) {
                 tripInfo = (*iterator);
                 break;
@@ -208,7 +208,6 @@ void TaxiCenter::addTaxi(Taxi *cab) {
  */
 void TaxiCenter::addTI(TripInfo *ti) {
     trips->push_back(ti);
-    std::cout << "TaxiCenter: addTI" << endl;
 }
 
 /**
@@ -222,7 +221,6 @@ void TaxiCenter::setDriverToTi(TripInfo *ti) {
     delete (computeRoadT[ti->getRideId()]);
     computeRoadT.erase(ti->getRideId());
 
-    std::cout << "TaxiCenter: setDriverToTi - start" << endl;
     // check if the road didn't computed, delete it
     if (ti->getRoad() == NULL) {
         delete (ti);
@@ -244,11 +242,8 @@ void TaxiCenter::setDriverToTi(TripInfo *ti) {
     c->sendData<TripInfo>(ti);
     // receive confirm from the client
     c->receive(buffer, sizeof(buffer));
-    std::cout << "TaxiCenter: setDriverToTi - finish" << endl;
-
     // put the driver at the employees list
     employees->push_back(d);
-    std::cout << "TaxiCenter: setDriverToTi - push finish -  finish" << endl;
 }
 
 /**
@@ -259,15 +254,13 @@ void TaxiCenter::moveAll() {
     ++clock;
     // iterate over all drivers tell them to move.
     for (std::list<Driver *>::const_iterator iterator = employees->begin(),
-             end = employees->end(); iterator != end; ++iterator) {
+                 end = employees->end(); iterator != end; ++iterator) {
         (*iterator)->moveOneStep();
     }
     // tell all listener to notify.
     for (std::list<EventListener *>::const_iterator iterator = listeners->begin(),
-             end = listeners->end(); iterator != end; ++iterator) {
+                 end = listeners->end(); iterator != end; ++iterator) {
         (*iterator)->notify();
     }
-    std::cout << "TaxiCenter: moveAll " << endl;
-
 }
 

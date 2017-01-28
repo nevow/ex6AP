@@ -2,9 +2,7 @@
 // client.
 //
 
-#include "../server/managment/ProperInput.h"
 #include "../server/tripOperations/Driver.h"
-#include "../server/enum/MartialStatuesFactory.h"
 #include "../server/sockets/Tcp.h"
 #include "../parsers/Parser.h"
 
@@ -52,7 +50,7 @@ int main(int argc, char *argv[]) {
             std::list<CoordinatedItem *> *road = ti->getRoad();
             // pass the coordinated items of the road to the tempRoad
             for (std::list<CoordinatedItem *>::const_iterator iterator = road->begin(),
-                     end = road->end(); iterator != end; ++iterator) {
+                         end = road->end(); iterator != end; ++iterator) {
                 tempRoad->push_back(*(iterator));
             }
 

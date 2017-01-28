@@ -1,5 +1,5 @@
 //
-// Created by maayan on 21/01/17.
+// Task.
 //
 
 #ifndef EX6AP_TASK_H

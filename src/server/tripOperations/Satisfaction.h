@@ -23,6 +23,7 @@
 class Satisfaction {
 
 private:
+
     int amount;
     double average;
 

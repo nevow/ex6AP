@@ -14,7 +14,7 @@ class BFS {
 
 public:
 
-    static list<CoordinatedItem *> *use(Grid *Graph, CoordinatedItem *root,CoordinatedItem *dest);
+    static list<CoordinatedItem *> *use(Grid *Graph, CoordinatedItem *root, CoordinatedItem *dest);
 
     static void BFSAlgo(Grid *Graph, CoordinatedItem *root);
 

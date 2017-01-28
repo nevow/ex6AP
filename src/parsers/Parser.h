@@ -16,10 +16,13 @@
 using namespace std;
 
 class Parser {
+
 private:
     int gridCols;
     int gridRows;
+
 public:
+
     Driver *createDriver();
 
     Taxi *createTaxi();

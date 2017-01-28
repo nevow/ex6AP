@@ -9,6 +9,7 @@
 #include "../coordinates/Point.h"
 
 class Passenger {
+
 private:
     Point *start;
     Point *destination;

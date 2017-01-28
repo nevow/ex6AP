@@ -104,13 +104,12 @@ void MainFlow::input() {
                 // create thread that handle with client acceptnes
                 int status = pthread_create(&connection_thread, NULL, acceptClients, &cd);
                 if (status) {
-                    cout << "problem creating thread" << endl;
                     break;
                 }
                 pthread_join(connection_thread, NULL);      // wait until the the thread finish
 
                 for (std::list<Connection *>::const_iterator con = connections->begin(),
-                         end = connections->end(); con != end; ++con) {
+                             end = connections->end(); con != end; ++con) {
                     // receive the driver from the client
                     Driver *driver = (*con)->receiveData<Driver>();
 

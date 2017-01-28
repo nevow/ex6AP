@@ -1,5 +1,5 @@
 //
-// Created by maayan on 21/01/17.
+// ThreadPool.
 //
 
 #ifndef EX6AP_THREADPOOL_H
@@ -27,7 +27,7 @@ public:
 
     void *execute_thread();
 
-    int add_task(Task *task);
+    void add_task(Task *task);
 
 };
 

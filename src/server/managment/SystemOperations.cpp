@@ -33,6 +33,34 @@ SystemOperations::SystemOperations(Map *map1, std::map<int, Connection *> *conMa
 }
 
 /**
+ * destructor.
+ */
+SystemOperations::~SystemOperations() {
+    pthread_mutex_destroy(&grid_locker);        // destroy the mutex
+    delete (map);
+    delete (tc);
+    // delete all the obstacles list
+    while (!obstacles->empty()) {
+        delete (obstacles->front());
+        obstacles->pop_front();
+    }
+    delete (obstacles);
+    delete (threadPool);
+    while (!computeRoadT.empty()) {
+        std::map<int, Task *>::iterator it = (computeRoadT.begin());
+        delete (it->second);
+        computeRoadT.erase(it->first);
+    }
+}
+
+/**
+ * @return the obstacles list
+ */
+list<Node *> *SystemOperations::getObstacles() const {
+    return obstacles;
+}
+
+/**
  * @return the x of the so
  */
 int SystemOperations::getX() const {
@@ -82,10 +110,8 @@ void SystemOperations::addTI(TripInfo *tripInfo) {
     TArgs *tArgs = new TArgs();
     tArgs->ti = tripInfo;
     tArgs->grid = map;
-    std::cout << "start addTI" << endl;
     Task *task = new Task(ComputeRoad, tArgs);
     threadPool->add_task(task);
-    std::cout << "addTI - add_task" << endl;
     computeRoadT[tripInfo->getRideId()] = task;    // add the thread to computeRoadT map
     tc->addTI(tripInfo);                           // add the tripInfo to the taxi center
 }
@@ -108,25 +134,17 @@ void SystemOperations::moveAll() {
 /**
  * ComputeRoad use the BFS to calculate the road of the ride.
  * @param threadArgs is the struct with the argumrnts for the calculation
- * @return
+ * @return NULL
  */
 void *SystemOperations::ComputeRoad(void *threadArgs) {
     TArgs *args = (TArgs *) threadArgs;
     Node *start = new Node(args->ti->getStart());          // the start of the road
     Point *end = (args->ti->getDestination());             // the end of the road
     CoordinatedItem *dest = args->grid->getCoordinatedItem(end->getX(), end->getY());
-    // use BFS algoritem
+    // use BFS algorithm
     std::list<CoordinatedItem *> *road = BFS::use(args->grid, start, dest);
     delete start;
     args->ti->setRoad(road);        // set the road in the Trip Info
     delete (args);
     return NULL;
-}
-
-/**
- *
- * @return the obstacles list
- */
-list<Node *> *SystemOperations::getObstacles() const {
-    return obstacles;
 }

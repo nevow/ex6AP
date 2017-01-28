@@ -1,10 +1,10 @@
 all: server.out client.out
 
-server.out: server.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o BFS.o Task.o ThreadPool.o Connection.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Parser.o
-	g++ -o server.out -std=c++0x server.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o BFS.o Task.o ThreadPool.o Connection.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Parser.o -lboost_serialization -lpthread
+server.out: server.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o DataSender.o MainFlow.o SystemOperations.o BFS.o Task.o ThreadPool.o Connection.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Parser.o
+	g++ -o server.out -std=c++0x server.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o DataSender.o MainFlow.o SystemOperations.o BFS.o Task.o ThreadPool.o Connection.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Parser.o -lboost_serialization -lpthread
 
-client.out: client.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o BFS.o Task.o ThreadPool.o Connection.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Parser.o
-	g++ -o client.out -std=c++0x client.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o DataSender.o MainFlow.o ProperInput.o SystemOperations.o BFS.o Task.o ThreadPool.o Connection.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Parser.o -lboost_serialization -lpthread
+client.out: client.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o DataSender.o MainFlow.o  SystemOperations.o BFS.o Task.o ThreadPool.o Connection.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Parser.o
+	g++ -o client.out -std=c++0x client.o Map.o Node.o Point.o TripEndListener.o SetTripListener.o DataSender.o MainFlow.o SystemOperations.o BFS.o Task.o ThreadPool.o Connection.o Socket.o Tcp.o Cab.o LuxuryCab.o Driver.o Passenger.o Satisfaction.o TaxiCenter.o TripInfo.o Parser.o -lboost_serialization -lpthread
 
 client.o: src/client/client.cpp
 	g++ -std=c++0x -c src/client/client.cpp
@@ -35,9 +35,6 @@ DataSender.o: src/server/managment/DataSender.cpp src/server/managment/DataSende
 
 MainFlow.o: src/server/managment/MainFlow.cpp src/server/managment/MainFlow.h src/server/enum/CarManufactureFactory.h src/server/enum/ColorFactory.h src/server/enum/MartialStatuesFactory.h
 	g++ -std=c++0x -c src/server/managment/MainFlow.cpp
-
-ProperInput.o: src/server/managment/ProperInput.cpp src/server/managment/ProperInput.h
-	g++ -std=c++0x -c src/server/managment/ProperInput.cpp
 
 SystemOperations.o: src/server/managment/SystemOperations.cpp src/server/managment/SystemOperations.h
 	g++ -std=c++0x -c src/server/managment/SystemOperations.cpp

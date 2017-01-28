@@ -69,7 +69,6 @@ void BFS::BFSAlgo(Grid *graph, CoordinatedItem *root) {
 list<CoordinatedItem *> *BFS::getTrip(CoordinatedItem *dest) {
     // if dest is unreachable return null
     if (dest->getDistance() < 0) {
-        cout << "BFS: returning NULL" << endl;
         pthread_mutex_unlock(&grid_locker);         // unlock the access to the BFS
         return NULL;
     }
@@ -87,7 +86,5 @@ list<CoordinatedItem *> *BFS::getTrip(CoordinatedItem *dest) {
     road->pop_front();
     road->front()->setParent(NULL);
     pthread_mutex_unlock(&grid_locker);         // unlock the access to the BFS
-
-    std::cout << "BFS: road computed !" << endl;
     return road;
 }

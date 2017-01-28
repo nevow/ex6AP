@@ -4,7 +4,6 @@
 #include "Parser.h"
 
 /**
- *
  * @return a Driver or throw exception for bad input
  */
 Driver *Parser::createDriver() {
@@ -89,7 +88,6 @@ Driver *Parser::createDriver() {
 }
 
 /**
- *
  * @return a Taxi or NULL for bad input
  */
 Taxi *Parser::createTaxi() {
@@ -170,12 +168,11 @@ Taxi *Parser::createTaxi() {
 }
 
 /**
- *
  * @return a TripInfo or NULL for bad input
  */
 TripInfo *Parser::createTripInfo(int clock, int x, int y) {
     char id[12], startx[6], starty[6], endx[6], endy[6], amountOfPassengers[3],
-        tariff[11], time[11];
+            tariff[11], time[11];
     char buffer[120];
     char c;
     cin.getline(buffer, sizeof(buffer), '\n');
@@ -288,7 +285,6 @@ TripInfo *Parser::createTripInfo(int clock, int x, int y) {
 }
 
 /**
- *
  * @return a Map or NULL for bad input
  */
 Map *Parser::createMap() {
@@ -353,7 +349,6 @@ Map *Parser::createMap() {
 }
 
 /**
- *
  * @return a Point or NULL for bad input
  */
 Point *Parser::createPoint() {
@@ -416,7 +411,6 @@ Point *Parser::createPoint() {
 }
 
 /**
- *
  * @param dst to copy to
  * @param src to copy from
  * @param dstSize size of the dst
@@ -438,7 +432,6 @@ void Parser::validInputAndCopy(char *dst, char *src, int dstSize, int startIndex
 }
 
 /**
- *
  * @param idInput buffer that needs to hold an id
  * @return the id if valid or throw exception
  */
@@ -460,7 +453,6 @@ int Parser::isValidId(char *idInput) {
 }
 
 /**
- *
  * @param ageInput buffer that needs to hold an age
  * @return the age if valid or throw exception
  */
@@ -483,7 +475,6 @@ int Parser::isValidAge(char *ageInput) {
 }
 
 /**
- *
  * @param amountOfPassengers buffer that needs to hold an amount
  * @return the amount if valid or throw exception
  */
@@ -506,7 +497,6 @@ int Parser::isValidAmountOfPassengers(char *amountOfPassengers) {
 }
 
 /**
- *
  * @param experienceInput buffer that needs to hold an experience
  * @return the experience if valid or throw exception
  */
@@ -529,7 +519,6 @@ int Parser::isValidExperience(char *experienceInput) {
 }
 
 /**
- *
  * @param tariffInput buffer that needs to hold a tariff
  * @return the tariff if valid or throw exception
  */
@@ -552,7 +541,6 @@ int Parser::isValidTariff(char *tariffInput) {
 }
 
 /**
- *
  * @param time buffer that needs to hold a time
  * @param clock represents the time
  * @return the time if valid or throw exception
@@ -576,7 +564,6 @@ int Parser::isValidTime(char *time, int clock) {
 }
 
 /**
- *
  * @param Coord buffer that needs to hold a size
  * @return the size if valid or -1 if not
  */
@@ -599,7 +586,6 @@ int Parser::isValidMapSize(char *Coord) {
 }
 
 /**
- *
  * @param statuesInput buffer that needs to hold a statues letter
  * @return the statues if valid or throw exception
  */
@@ -623,7 +609,6 @@ MartialStatues Parser::isValidMartialStatues(char *statuesInput) {
 }
 
 /**
- *
  * @param color buffer that needs to hold a color letter
  * @return the color if valid or throw exception
  */
@@ -646,7 +631,6 @@ Color Parser::isValidColor(char *color) {
 }
 
 /**
- *
  * @param manufacture buffer that needs to hold a manufacture letter
  * @return the manufacture if valid or throw exception
  */
@@ -669,7 +653,6 @@ CarManufacture Parser::isValidManufacture(char *manufacture) {
 }
 
 /**
- *
  * @param x buffer that needs to hold a x coord
  * @param y buffer that needs to hold a y coord
  * @return the Point if valid or throw exception
@@ -696,7 +679,6 @@ Point *Parser::isValidPoint(char *x, char *y) {
 }
 
 /**
- *
  * @param p point to check
  * @param cols of the grid
  * @param rows of the grid
@@ -709,7 +691,6 @@ void Parser::isValidPointOnGrid(Point *p, int cols, int rows) {
 }
 
 /**
- *
  * @param c array to check if all values are numbers
  * @return 0 if not a number, 1 if a number
  */
@@ -743,7 +724,6 @@ int Parser::getPositiveNumberFromUser() {
 }
 
 /**
- *
  * @param p to check
  * @param obstacles list to check if point is one of them
  * @return 1 if the point is an obstacle, 0 otherwise
@@ -751,7 +731,7 @@ int Parser::getPositiveNumberFromUser() {
 int Parser::isObstacle(Point *p, list<Node *> *obstacles) {
     // iterate over all the obstacles, compare them with p
     for (std::list<Node *>::const_iterator iterator = obstacles->begin(),
-             end = obstacles->end(); iterator != end; ++iterator) {
+                 end = obstacles->end(); iterator != end; ++iterator) {
         // if p is the same as one of the obstacles, return 1;
         if (*((*iterator)->getP()) == *p) {
             return 1;

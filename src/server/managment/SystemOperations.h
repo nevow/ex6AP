@@ -20,6 +20,7 @@ using namespace std;
 class SystemOperations {
 
 private:
+
     int x;
     int y;
     list<Node *> *obstacles;
@@ -31,22 +32,9 @@ public:
 
     SystemOperations(Map *map, std::map<int, Connection *> *cm);
 
-    ~SystemOperations() {
-        pthread_mutex_destroy(&grid_locker);        // destroy the mutex
-        delete (map);
-        delete (tc);
-        while (!obstacles->empty()) {
-            delete (obstacles->front());
-            obstacles->pop_front();
-        }
-        delete (obstacles);
-        delete (threadPool);
-        while (!computeRoadT.empty()) {
-            std::map<int, Task *>::iterator it = (computeRoadT.begin());
-            delete (it->second);
-            computeRoadT.erase(it->first);
-        }
-    }
+    ~SystemOperations();
+
+    list<Node *> *getObstacles() const;
 
     int getX() const;
 
@@ -65,8 +53,6 @@ public:
     void moveAll();
 
     static void *ComputeRoad(void *tripInfo);
-
-    list<Node *> *getObstacles() const;
 };
 
 
