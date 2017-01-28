@@ -31,6 +31,7 @@ ThreadPool::~ThreadPool() {
         pthread_join(threads[i], NULL);
     }
     pthread_mutex_destroy(&TP_locker);
+
 }
 
 void *start_thread(void *arg) {

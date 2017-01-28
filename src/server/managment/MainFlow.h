@@ -44,6 +44,7 @@ public:
         delete connections;
         delete sock;
         delete choice;
+        pthread_mutex_destroy(&global_validator_locker);
     }
 
     void input();

@@ -12,9 +12,10 @@
  * @param experience of the driver
  */
 Driver::Driver(int id, int age, const MartialStatues &status, int experience, int vehicle_id) :
-        id(id), age(age), status(status), experience(experience), vehicleId(vehicle_id) {
+    id(id), age(age), status(status), experience(experience), vehicleId(vehicle_id) {
     satisfaction = new Satisfaction();
     ti = NULL;
+    cab = NULL;
 }
 
 /**
@@ -71,13 +72,6 @@ TripInfo *Driver::getTi() {
  */
 Taxi *Driver::getCab() const {
     return cab;
-}
-
-/**
- * @return the port of the client driver
- */
-int Driver::getPort() const {
-    return port;
 }
 
 /**

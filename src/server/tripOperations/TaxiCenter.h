@@ -33,11 +33,6 @@ private:
 
 public:
 
-    TaxiCenter(list<Driver *> *employees, list<Node *> *locations, list<Taxi *> *cabs,
-               list<TripInfo *> *trips)
-            : employees(employees), locations(locations), cabs(cabs), trips(trips),
-              availableDrivers(employees), clock(0) {};
-
     TaxiCenter(std::map<int, Connection *> *cm);
 
     ~TaxiCenter();

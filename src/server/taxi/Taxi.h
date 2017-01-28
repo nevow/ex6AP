@@ -32,7 +32,7 @@ public:
      * @param id of the taxi
      */
     Taxi(const Color &color, const CarManufacture &firm, int id) :
-            color(color), firm(firm), id(id), kmPassed(0) {
+        color(color), firm(firm), id(id), kmPassed(0), tariff(0) {
         Point p(0, 0);
         location = new Node(&p);
     }

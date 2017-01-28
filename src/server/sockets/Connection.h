@@ -27,7 +27,6 @@ public:
 
     ~Connection() {
         pthread_join(t, NULL);
-        pthread_mutex_destroy(&global_validator_locker);
     }
 
     void setOption(int *status);

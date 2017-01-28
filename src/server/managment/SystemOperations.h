@@ -13,6 +13,7 @@
 #include "../roadComputers/ThreadPool.h"
 
 extern pthread_mutex_t grid_locker;
+extern std::map<int, Task *> computeRoadT;
 
 using namespace std;
 
@@ -40,6 +41,11 @@ public:
         }
         delete (obstacles);
         delete (threadPool);
+        while (!computeRoadT.empty()) {
+            std::map<int, Task *>::iterator it = (computeRoadT.begin());
+            delete (it->second);
+            computeRoadT.erase(it->first);
+        }
     }
 
     int getX() const;

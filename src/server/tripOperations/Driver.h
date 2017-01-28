@@ -23,7 +23,6 @@ private:
     Satisfaction *satisfaction;
     Taxi *cab;
     int vehicleId;
-    int port;
 
 public:
 
@@ -54,8 +53,6 @@ public:
 
     const MartialStatues &getStatus() const;
 
-    int getPort() const;
-
     void setStatus(const MartialStatues &status);
 
     void setExperience(int experience);
@@ -84,7 +81,6 @@ public:
         ar & satisfaction;
         ar & cab;
         ar & vehicleId;
-        ar & port;
     }
 
 };

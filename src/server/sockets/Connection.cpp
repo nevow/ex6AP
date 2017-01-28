@@ -24,7 +24,6 @@ void Connection::setOption(int *option) {
     threadData *td = new threadData;
     td->con = this;
     td->option = option;
-    pthread_mutex_init(&global_validator_locker, 0);               // lock
     // create a thread and apply on it sendInfoToClient
     int status = pthread_create(&t, NULL, sendInfoToClient, td);
     // if the thread doesn't Succeeded - report

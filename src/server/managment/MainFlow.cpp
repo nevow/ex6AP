@@ -14,13 +14,14 @@ int actionCount = 0;
  * initialize the environment, get map, obstacles and create a SystemOperations.
  */
 MainFlow::MainFlow(int port) {
-
-    int obstacleNum = 0;
+    choice = new int();
     connections = new std::list<Connection *>();
     // creates a socket for connection with the clients
     sock = new Tcp(1, port);
     std::list<Point *> points;
     Map *map;
+    int obstacleNum = 0;
+
     do {
         int flag = 0;
         // create map from user input
@@ -52,10 +53,10 @@ MainFlow::MainFlow(int port) {
             }
             continue;
         }
-        conMap = new std::map<int, Connection *>();
         break;
     } while (true);
 
+    conMap = new std::map<int, Connection *>();
     // create the system operation
     so = new SystemOperations(map, conMap);
     // make the obstacles List from the input
@@ -65,14 +66,13 @@ MainFlow::MainFlow(int port) {
         so->addObstacle(*p);
         delete p;
     }
-
+    pthread_mutex_init(&global_validator_locker, 0);               // lock
 }
 
 /**
  * get inputs from user and follow the commands.
  */
 void MainFlow::input() {
-    choice = new int();
     int id, drivers_num;
     connectionData cd;
     cd.sock = sock;
@@ -81,6 +81,7 @@ void MainFlow::input() {
     do {
         // get the input from user to choose the action
         *choice = parser.getPositiveNumberFromUser();
+        // if the input was not valid, print -1 and get new input
         if (*choice == -1) {
             cout << "-1" << endl;
         }
@@ -89,6 +90,7 @@ void MainFlow::input() {
             // create drivers, gets from the client
             case 1: {
                 drivers_num = parser.getPositiveNumberFromUser();      // amount of drivers
+                // if the input was not a valid number, print -1 and get new input
                 if (drivers_num == -1) {
                     cout << "-1" << endl;
                     break;
@@ -118,37 +120,44 @@ void MainFlow::input() {
             case 2: {
                 // get the input for the trip info
                 TripInfo *tripInfo = parser.createTripInfo(actionCount, so->getX(), so->getY());
+                // if trip info return NULL, then input was not good, print -1 and get new input
                 if (tripInfo == NULL) {
                     cout << "-1" << endl;
+                    // if the start or end points are obstacles.
+                    // delete the trip info and get new input
                 } else if (parser.isObstacle(tripInfo->getStart(), so->getObstacles())
-                           || parser.isObstacle(tripInfo->getDestination(), so->getObstacles())) {
+                           || parser.isObstacle(tripInfo->getDestination(), so->getObstacles())
+                           || (*(tripInfo->getStart()) == *(tripInfo->getDestination()))) {
                     delete tripInfo;
                 } else {
-                    so->addTI(tripInfo);                        // add the trip info to the system
+                    so->addTI(tripInfo);                      // add the trip info to the system
                 }
                 break;
             }
                 // create new Taxi
             case 3: {
                 Taxi *taxi = parser.createTaxi();
+                // if taxi return NULL, then input was not good, print -1 and get new input
                 if (taxi == NULL) {
                     cout << -1 << endl;
                 } else {
-                    so->addTaxi(taxi);                       // add the taxi to the system
+                    so->addTaxi(taxi);                        // add the taxi to the system
                 }
                 break;
             }
                 // request for a driver location by his id
             case 4: {
-                char idString[11];
-                cin.getline(idString, sizeof(idString), '\n');
-                try {
-                    id = parser.isValidId(idString);          // the id of the requested driver
-                    Point *location = so->getDriverLocation(id);
-                    if (location) {
-                        cout << *location;
-                    }
-                } catch (...) {
+                id = parser.getPositiveNumberFromUser();      // the id of the requested driver
+                // not a valid input
+                if (id == -1) {
+                    cout << -1 << endl;
+                    break;
+                }
+                Point *location = so->getDriverLocation(id);
+                // if the id does not match any driver id, dont print any thing
+                if (location) {
+                    cout << *location;
+                } else {
                     cout << -1 << endl;
                 }
                 break;
@@ -176,4 +185,5 @@ void MainFlow::input() {
     while (validateAllReceivedInfo < connections->size()) {
         sleep(1);
     }
+
 }
