@@ -23,10 +23,8 @@ void SetTripListener::notify() {
         TripInfo *ti = taxiCenter->getUrgentTi();
         // if there is a trip info
         if (ti != NULL) {
-            std::cout << "SetTripListener - setDriver" << endl;
             taxiCenter->setDriverToTi(ti);
         } else {
-            std::cout << "SetTripListener - finish" << endl;
             return;
         }
     }
